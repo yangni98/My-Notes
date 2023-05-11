@@ -1,0 +1,45 @@
+## v-on 事件绑定
+
+### 简写  @
+
+```html
+    <div id="root">
+        <h1>hello {{name}}</h1>
+        <button v-on:click="showInfo1">点击1</button>
+        <button @click="showInfo2(66,number)">点击2</button>
+    </div>
+    
+    <script>
+        new Vue({
+            el:"#root",
+            data:{
+                name:'YN'
+            },
+            methods: {
+                showInfo1(event){
+                    alert('hello1！！！')
+                }, 
+                 showInfo2(number,event){
+                    alert('hello2！！！'),
+                    console.log(event)
+                }
+            },
+        })
+    </script>
+```
+
+![image-20220922152829693](C:\Users\yn\AppData\Roaming\Typora\typora-user-images\image-20220922152829693.png)
+
+## 事件修饰符
+
+![image-20220922164542424](C:\Users\yn\AppData\Roaming\Typora\typora-user-images\image-20220922164542424.png)
+
+
+
+
+
+
+
+## 键盘事件
+
+![image-20220922190134502](C:\Users\yn\AppData\Roaming\Typora\typora-user-images\image-20220922190134502.png)

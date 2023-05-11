@@ -1,0 +1,41 @@
+# 入门案例解析
+
+### parent
+
+### starter
+
+### 引导类
+
+### 内嵌tomcat
+
+
+
+
+
+## 1.parent
+
+
+
+![image-20220930165100767](C:\Users\yn\AppData\Roaming\Typora\typora-user-images\image-20220930165100767.png)
+
+![image-20220930165658382](C:\Users\yn\AppData\Roaming\Typora\typora-user-images\image-20220930165658382.png)
+
+## 2.starter
+
+![image-20220930170243205](C:\Users\yn\AppData\Roaming\Typora\typora-user-images\image-20220930170243205.png)
+
+![image-20220930170433403](C:\Users\yn\AppData\Roaming\Typora\typora-user-images\image-20220930170433403.png)
+
+## 3.引导类
+
+![image-20220930171017462](C:\Users\yn\AppData\Roaming\Typora\typora-user-images\image-20220930171017462.png)
+
+
+
+## 4.内嵌tomcat
+
+![image-20220930171746935](C:\Users\yn\AppData\Roaming\Typora\typora-user-images\image-20220930171746935.png)
+
+![image-20220930171859966](C:\Users\yn\AppData\Roaming\Typora\typora-user-images\image-20220930171859966.png)
+
+![image-20220930171946482](C:\Users\yn\AppData\Roaming\Typora\typora-user-images\image-20220930171946482.png)

@@ -1,0 +1,36 @@
+## v-show  条件渲染
+
+![image-20220923195311402](C:\Users\yn\AppData\Roaming\Typora\typora-user-images\image-20220923195311402.png)
+
+```html
+    <div id="root">
+    <!-- // v-show做条件渲染 -->
+<h1 v-show="b">hello  {{name}}</h1>
+    <!-- // v-if 做条件渲染 -->
+    <h2 v-if="b">hhhhh{{name}}</h2>
+
+    <h3> 当前值是{{number}}</h3>
+        <br>
+        <button @click="number++">点击加1</button>
+
+        <h4 v-if="number>=2">到2了</h4>
+        <h4 v-if="number>=3">到3了</h4>
+        <h4 v-if="number>=5">到5了</h4>
+        <h4 v-if="number>=7">到7了</h4>
+        <h4 v-if="number>=9">到9了</h4>
+
+    </div>
+    
+</body>
+
+<script>
+    new Vue({
+        el:'#root',
+        data:{
+            name:'YN',
+            a:false,
+            b:true,
+            number:0
+        },
+```
+

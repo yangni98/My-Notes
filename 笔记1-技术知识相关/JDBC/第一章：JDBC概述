@@ -1,0 +1,261 @@
+# JDBC概述
+
+## java中的数据存储技术
+
++ 在java中 数据库存取技术可分为以下几类
++ + JDBC直接访问数据库
+  + JDO（java Data Object）
+  + 第三方O/R工具 如 Hibernate Mybatis
+
+
+
+## JDBC介绍
+
++ JDBC（java DataBase Connection） 是一个独立特定数据库管理系统，通用的SQL数据存储数据库存取和操作的公共接口 一组api 定义了用来访问数据库的标准java类库 （java.sql ,  java,sql) 使用这些类库可以以一种标准的方法，方便访问数据库资源。
++ JDBC为访问不同的数据库提供了一种统一途径 为开发者屏蔽了一些细节问题
++ JDBC的目标是使java程序员使用JDBC可以连接任何提供了JDBC驱动程序数数据库系统，这样就使得程序员无需对特定的数据库系统的特点有过多的了解 从而简化开发流程
++ 如果没有JDBC 那么JAVA
+
+
+
+## 获取数据库连接
+
+### Driver 接口实现类
+
+```java
+package com.yn.jdbc.myjdbc;
+
+import com.mysql.cj.jdbc.Driver;
+
+import java.sql.Connection;
+import java.sql.Statement;
+import java.util.Properties;
+
+public class jdbc01 {
+    public static void main(String[] args) throws Exception {
+        //1.注册驱动
+        Driver driver = new Driver();
+        
+        //2. 得到连接
+        String url ="jdbc:mysql://localhost:3307/jdbc_learn?serverTimezone=UTC";
+        //myssql的连接本质就是socket连接
+        //将用户名和密码放入到Properties对象
+        Properties properties = new Properties();
+        properties.setProperty("user","root");
+        properties.setProperty("password","root");
+
+        Connection connect = driver.connect(url, properties);
+
+        //3.执行sql
+    String sql="insert into user values(6,'yn','1324','sc','19961423534')";
+    Statement statement =connect.createStatement();// 执行sql 并生成其返回对象
+        int i = statement.executeUpdate(sql);//返回受影响的行数
+
+        System.out.println(i);
+
+        //4.关闭连接资源
+        statement.close();
+        connect.close();
+
+
+    }
+}
+```
+
++ 1.注册驱动
++ 2.连接sql服务，设置密码和账号
++ 3.执行sql
++ 4.关闭资源
+
+
+
+### 方式2（反射加载Driver类）
+
+```java
+package com.yn.jdbc.myjdbc;
+
+import com.mysql.cj.jdbc.Driver;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Properties;
+
+
+//连接mysql方式2  使用反射加载
+public class jdbc02 {
+    public static void main(String[] args) throws SQLException, ClassNotFoundException, IllegalAccessException, InstantiationException {
+        //1，创建连接对象
+        //使用反射加载 动态加载 更加的灵活 减少依赖性
+        Class<?> aClass = Class.forName("com.mysql.cj.jdbc.Driver");
+        Driver driver = (Driver)aClass.newInstance();
+
+        //设置连接账号密码，并连接 返回对象
+
+        String url ="jdbc:mysql://localhost:3307/jdbc_learn?serverTimezone=UTC";
+
+        Properties properties = new Properties();
+        properties.setProperty("user","root");
+        properties.setProperty("password","root");
+
+        Connection connect = driver.connect(url,properties);
+
+        //执行sql语句
+        String sql="insert into user values(8,'yn2','321','sc2','488568564856')";
+
+        Statement statement = connect.createStatement();
+
+        int i = statement.executeUpdate(sql);
+
+        System.out.println(i);
+
+
+    }
+}
+```
+
+
+
+
+
+### 方式三 DriverManager连接
+
+替代Driver 进行统一管理
+
+```java
+package com.yn.jdbc.myjdbc;
+
+
+import java.sql.*;
+import java.util.Properties;
+
+//方式三 DriverManager连接
+public class jdbc03 {
+    public static void main(String[] args) throws ClassNotFoundException, IllegalAccessException, InstantiationException, SQLException {
+
+        //使用反射加载Driver
+        Class<?> aClass = Class.forName("com.mysql.cj.jdbc.Driver");
+        Driver driver = (Driver)aClass.newInstance();
+
+        //创建url 和user password
+        String url= "jdbc:mysql://localhost:3307/jdbc_learn?serverTimezone=UTC";
+
+        Properties properties = new Properties();
+        properties.setProperty("user","root");
+        properties.setProperty("password","root");
+
+
+        DriverManager.registerDriver(driver);//注册Driver驱动
+
+        Connection connection = DriverManager.getConnection(url, properties);
+
+        //执行sql语句
+        String sql="insert into user values(9,'yn3','321','sc3','488568564856')";
+
+        Statement statement = connection.createStatement();
+        int i = statement.executeUpdate(sql);
+        System.out.println(i);
+
+    }
+}
+```
+
+
+
+
+
+### 方式四  jdbcConn.java
+
+```java
+package com.yn.jdbc.myjdbc;
+
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+// 使用Class.forName自动完成注册
+// ("com.mysql.jdbc.Driver")
+public class jdbc04 {
+
+    public static void main(String[] args) throws ClassNotFoundException, SQLException {
+       //使用反射加载Driver类
+        //在加载Driver时候自动完成注册
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        //创建url 和user password
+
+        String url="jdbc:mysql://localhost:3307/jdbc_learn?serverTimezone=UTC";
+
+        String user ="root";
+        String password ="root";
+
+        Connection connection = DriverManager.getConnection(url, user, password);
+
+        // 执行sql
+        String sql="insert into user values(11,'yn4','54563','sc4','45555')";
+
+        Statement statement = connection.createStatement();
+        int i = statement.executeUpdate(sql);
+
+        System.out.println(i);
+
+    }
+}
+```
+
+
+
+
+
+mysql5.1.6之后就无需 Class.forName(““)
+
+jdk1.5以后使用了jdbc4 不需要显示调用class。forname（）注册驱动 而是自动调用驱动
+
+
+
+### 方式5 配置文件进行
+
+```java
+package com.yn.jdbc.myjdbc;
+
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Properties;
+
+//使用配置文件
+//在方式4基础上
+public class jdbc05 {
+
+    public static void main(String[] args) throws IOException, SQLException {
+        //通过Properties获取配置文件信息
+        Properties properties=  new Properties();
+        properties.load(new FileInputStream("mysql.properties"));
+
+        String user=properties.getProperty("user");
+        String password=properties.getProperty("password");
+        String driver=properties.getProperty("driver");
+        String url=properties.getProperty("url");
+
+
+        Connection connection = DriverManager.getConnection(url, user, password);
+
+        //
+        Statement statement = connection.createStatement();
+
+
+        String sql="insert into user values(12,'yn4','54563','sc4','45555')";
+        int i = statement.executeUpdate(sql);
+
+        System.out.println(i);
+    }
+
+}
+```
+
